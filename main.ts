@@ -15,6 +15,22 @@ function main() {
 
   const destPath = path.join(outputDir, 'entry.txt');
   fs.writeFileSync(destPath, joke);
+
+  // Verify the written entry: 1-280 characters (Unicode code points),
+  // and not only whitespace.
+  const written = fs.readFileSync(destPath, 'utf8');
+  const charCount = Array.from(written).length;
+  if (charCount < 1 || charCount > 280) {
+    throw new Error(
+      `entry.txt must be 1-280 characters, got ${charCount} characters`
+    );
+  }
+  if (written.trim().length === 0) {
+    throw new Error('entry.txt must not be only whitespace');
+  }
+  console.log(
+    `Verified entry.txt: ${charCount} characters, not whitespace-only`
+  );
   console.log(`Wrote entry.txt (${joke.length} characters) to ${destPath}`);
 }
 
